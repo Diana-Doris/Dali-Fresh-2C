@@ -17,8 +17,19 @@
       <!-- 一级导航 -->
       <first-nav />
 
-      <!-- 二级导航 -->
-      <second-nav />
+      <template v-if="showContent">
+        <!-- 二级导航 -->
+        <second-nav />
+        <!-- goodList区域 -->
+        <good-list />
+      </template>
+      <!-- 加载条 -->
+      <van-loading
+        size="2rem"
+        vertical
+        v-else
+      />
+
     </div>
 
   </div>
@@ -27,11 +38,18 @@
 <script>
 import firstNav from '../components/FirstNav.vue';
 import secondNav from '../components/SecondNav.vue';
+import goodList from '../components/goodContent.vue';
 
 export default {
   components: {
     firstNav,
     secondNav,
+    goodList,
+  },
+  computed: {
+    showContent() {
+      return this.$store.state.showContent;
+    },
   },
   data() {
     return {

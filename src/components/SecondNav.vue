@@ -15,6 +15,7 @@
 </template>
 
 <script>
+import { mapActions, mapMutations } from 'vuex';
 import getDis from '../utils/slider_Func';
 
 export default {
@@ -24,11 +25,22 @@ export default {
       I: 0,
       value: '',
       nextSibling: null,
-      list: [],
       over: false,
     };
   },
+  created() {
+    this.resetItemList();
+
+    this.getItemList({
+      type: this.list[this.I],
+      page: 1,
+      size: this.$store.state.size,
+      sort: 'all',
+    });
+  },
   methods: {
+    ...mapActions(['getItemList']),
+    ...mapMutations(['resetItemList']),
     click(index, e) {
       if (this.move) {
         return;
@@ -36,15 +48,20 @@ export default {
       this.I = index;
       /* 移动 */
       getDis(e.target, this.$refs.secondnav, 'vertical');
+
+      /* 重置itemList数据 */
+      this.resetItemList();
+      /* 获取右侧数据 */
+      this.getItemList({
+        type: this.list[index],
+        page: 1,
+        size: this.$store.state.size,
+        sort: 'all',
+      });
     },
   },
-  watch: {
-    '$store.state.sideBarList': {
-      handler(newVal) {
-        this.list = newVal;
-      },
-      immediata: true,
-    },
+  computed: {
+    list() { return this.$store.state.sideBarList ? this.$store.state.sideBarList : []; },
   },
 };
 

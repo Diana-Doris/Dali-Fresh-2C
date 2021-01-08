@@ -2,15 +2,15 @@ import axios from 'axios';
 
 const appkey = 'Diana_1609547392383';
 const instance = axios.create({
-  baseURL: 'https://mallapi.duyiedu.com/goods/',
+  baseURL: 'https://mallapi.duyiedu.com/goods',
 });
 /* 拦截请求 */
 instance.interceptors.request.use(
   (config) => ({
     ...config,
     params: {
-      ...config.params,
       appkey,
+      ...config.params,
     },
   }),
   (error) => Promise.reject(error),
