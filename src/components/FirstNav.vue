@@ -28,6 +28,9 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+import getDis from '../utils/slider_Func';
+
 export default {
   data() {
     return {
@@ -121,7 +124,12 @@ export default {
       ],
     };
   },
+  created() {
+    this.getSlideList(this.firstNavData[this.I].title);
+  },
   methods: {
+    ...mapActions(['getSlideList']),
+    /* 点击事件 */
     click(index, e) {
       if (this.move) {
         return;
@@ -129,26 +137,10 @@ export default {
       this.I = index;
 
       /* 计算移动距离 */
-      const itemWidth = e.target.offsetWidth;/* 自身宽度 */
-      const itemLeft = e.target.getBoundingClientRect().left;/* 距离左侧边界距离 */
-      const { firstnav } = this.$refs;/* 父级元素 */
-      const wrapperrWidth = firstnav.offsetWidth;/* 父级宽度 */
-      const end = itemWidth / 2 + itemLeft - wrapperrWidth / 2;/* 需要滚动的距离 */
-      this.moveTo(firstnav.scrollLeft, end);
+      getDis(e.target, this.$refs.firstnav, 'horizontal');
 
       /* 获取侧边栏数据 */
-    },
-    moveTo(start, end) {
-      let dis = 0;
-      const speed = end > 0 ? 3 : -3;
-      const t = setInterval(() => {
-        dis += speed;
-        this.$refs.firstnav.scrollLeft = start + dis;
-        if (Math.abs(dis) > Math.abs(end)) {
-          this.$refs.firstnav.scrollLeft = start + end;
-          clearInterval(t);
-        }
-      }, 2);
+      this.getSlideList(this.firstNavData[index].title);
     },
   },
 };

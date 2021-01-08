@@ -16,6 +16,9 @@
 
       <!-- 一级导航 -->
       <first-nav />
+
+      <!-- 二级导航 -->
+      <second-nav />
     </div>
 
   </div>
@@ -23,10 +26,12 @@
 
 <script>
 import firstNav from '../components/FirstNav.vue';
+import secondNav from '../components/SecondNav.vue';
 
 export default {
   components: {
     firstNav,
+    secondNav,
   },
   data() {
     return {
