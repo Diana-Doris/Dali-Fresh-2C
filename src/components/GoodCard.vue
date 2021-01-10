@@ -24,17 +24,24 @@
           >{{ tag }}</div>
         </div>
         <div class="overflow-hidden prices">
-          <div class="price-off">￥{{ good.price_off }}</div>
+          <div class="price-off">￥{{ good.price }}</div>
+          <!-- <div class="price-off">￥{{ good.price_off }}</div> -->
           <!-- <div class="price">￥{{ good.price }}</div> -->
         </div>
 
         <!-- 数量 -->
         <div class="counter">
-          <div>
+          <div
+            @touchend="counter(good.id, -1)"
+            v-show="counterNum[good.id]"
+          >
             <img src="https://duyi-bucket.oss-cn-beijing.aliyuncs.com/img/rec.png">
           </div>
-          <div class="num">数量</div>
-          <div>
+          <div
+            class="num"
+            v-show="counterNum[good.id]"
+          >{{ counterNum[good.id] ? counterNum[good.id] : '' }}</div>
+          <div @touchend="counter(good.id, 1)">
             <img src="https://duyi-bucket.oss-cn-beijing.aliyuncs.com/img/add.png">
           </div>
         </div>
@@ -46,21 +53,58 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapMutations, mapState } from 'vuex';
+import Animate from '../utils/animate';
 
 export default {
   data() {
     return {
       showMoveDot: [],
+      clickNum: 0,
+      ID: null,
       elLeft: 0,
       elTop: 0,
       x: 0,
       y: 0,
     };
   },
+  methods: {
+    ...mapMutations(['storageChange']),
+    counter(id, num) {
+      // 修改本地的值
+      this.storageChange({ id, num });
+      /* 设置飞入购物车动画 */
+      /*    起点位置 */
+      const { left, top } = this.$refs.img[1].getBoundingClientRect();/* 图片起始位置 */
+      const { offsetWidth: imgWidth, offsetHeight: imgHeight } = this.$refs.img;/* 购物车款宽高 */
+
+      const shopCar = document.querySelector('shop-car');
+      const { left: carX, top: carY } = shopCar.getBoundingClientRect();/* 购物车的位置 */
+      const { offsetWidth: carWidth, offsetHeight: carHeight } = shopCar;/* 购物车款宽高 */
+
+      /*    终点位置 */
+      const endX = carX + carWidth / 2;
+      const endY = carY + carHeight / 2;
+
+      Animate({
+        src: this.$refs.img.src,
+        start: {
+          left,
+          top,
+        },
+        end: {
+          endX,
+          endY,
+        },
+        width: imgWidth,
+        heihgt: imgHeight,
+      });
+    },
+  },
   computed: {
     ...mapState({
       goodList: (state) => state.itemList,
+      counterNum: (state) => state.counterNum,
     }),
   },
   /*  watch: {

@@ -8,6 +8,11 @@
 <script>
 
 export default {
+  created() {
+    /* 拿取本地存储的商品数据 */
+    const counterNum = JSON.parse(localStorage.getItem('goods')) || {};
+    this.$store.commit('setCounterNum', counterNum);
+  },
 };
 </script>
 <style lang="less">

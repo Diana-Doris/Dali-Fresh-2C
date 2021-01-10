@@ -6,16 +6,16 @@
     <!-- 头部 -->
     <div class="list-header van-hairline--top-bottom">
       <div
-        :class="{'active': type == 'all'}"
+        :class="{'active': type === 'all'}"
         @touchend="changeType('all')"
       >综合</div>
       <div
-        :class="{'active': type == 'sale'}"
+        :class="{'active': type === 'sale'}"
         @touchend="changeType('sale')"
       >销量</div>
       <div
         class="price"
-        :class="{'price-up': type == 'price-up','price-down' : type == 'price-down'}"
+        :class="{'price-up': type === 'price-up','price-down' : type == 'price-down'}"
         @touchend="changeType('price')"
       >价格</div>
     </div>
@@ -74,17 +74,13 @@ export default {
       } else {
         this.type = 'price-up';
       }
+      this.onRefresh();
     },
     /* 加载 */
     async onLoad() {
       this.page += 1;
       this.loading = true;
-      const result = await this.getItemList({
-        type: this.$store.state.type,
-        page: this.page,
-        size: this.$store.state.size,
-        sort: 'all',
-      });
+      const result = await this.getItemList(this.goodListParams);
       if (result) {
         this.loading = false;
       } else {
@@ -101,16 +97,22 @@ export default {
       this.loading = true;
       this.resetItemList();/* 数据初始化 */
       this.refreshing = true;/* 刷新符号开启 */
-
-      this.getItemList({
-        type: this.$store.state.type,
-        page: 1,
-        size: this.$store.state.size,
-        sort: 'all',
-      });
+      console.log(this.type);
+      this.page = 1;
+      this.getItemList(this.goodListParams);
       this.refreshing = false;/* 刷新符号结束 */
 
       this.onLoad();
+    },
+  },
+  computed: {
+    goodListParams() {
+      return {
+        type: this.$store.state.type,
+        page: this.page,
+        size: this.$store.state.size,
+        sort: this.type,
+      };
     },
   },
 

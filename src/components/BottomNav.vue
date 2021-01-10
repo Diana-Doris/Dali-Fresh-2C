@@ -22,6 +22,8 @@
       <van-tabbar-item
         icon="cart-o"
         :to="{name: 'Shopping'}"
+        :badge="num"
+        class="shop-car"
       >购物车
       </van-tabbar-item>
 
@@ -40,6 +42,21 @@ export default {
     return {
       active: 0,
     };
+  },
+  computed: {
+    num() {
+      const goods = Object.values(this.$store.state.counterNum);
+      /* let num = 0;
+      goods.forEach((ele) => {
+        num += ele;
+      }); */
+      const num = goods.reduce((prev, next) => prev + next, 0);
+      if (num > 99) {
+        return '99+';
+      }
+      console.log(num);
+      return num;
+    },
   },
 };
 </script>
