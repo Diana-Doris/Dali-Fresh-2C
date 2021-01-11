@@ -54,7 +54,7 @@ export default {
       if (num > 99) {
         return '99+';
       }
-      console.log(num);
+      // console.log(num);
       return num;
     },
   },

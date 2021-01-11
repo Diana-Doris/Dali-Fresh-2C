@@ -12,6 +12,8 @@ export default new Vuex.Store({
     itemList: [],
     type: null,
     counterNum: {},
+    searchList: [],
+    historyList: [],
   },
   mutations: {
     setSideBarList(state, list) {
@@ -49,6 +51,16 @@ export default new Vuex.Store({
       }
       localStorage.setItem('goods', JSON.stringify(state.counterNum));
     },
+    setSearchList(state, list) {
+      state.searchList = list;
+      // console.log(state.searchList);
+    },
+    clearSearchList(state) {
+      state.searchList = [];
+    },
+    pushHistoryList(state, Str) {
+      state.historyList.push(Str);
+    },
   },
   actions: {
     /* 获得sidebarlist数据 */
@@ -70,6 +82,13 @@ export default new Vuex.Store({
         return true;
       }
       return false;
+    },
+    /* 获取模糊搜索数据 */
+    async getSearchList({ commit }, ele) {
+      // console.log(ele);
+      const { result } = await Urls.likeSearch(ele);
+      console.log(result);
+      commit('setSearchList', result);
     },
   },
   modules: {},

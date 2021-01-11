@@ -8,4 +8,10 @@ export default {
   itemClassify(obj) {
     return axios.get('/getGoodsList', { params: obj });
   },
+  likeSearch(val) {
+    return axios.get('/likeSearch', { params: { likeValue: val } });
+  },
+  search(obj) {
+    return axios.get('/search', { params: obj });
+  },
 };

@@ -2,7 +2,7 @@
   <div v-if="goodList">
     <div
       class="card van-hairline--bottom"
-      v-for="good in goodList"
+      v-for="(good, index) in goodList"
       :key="Math.random()*good.id"
     >
       <!-- 图片 -->
@@ -32,7 +32,7 @@
         <!-- 数量 -->
         <div class="counter">
           <div
-            @touchend="counter(good.id, -1)"
+            @touchend="counter(good.id, -1,index)"
             v-show="counterNum[good.id]"
           >
             <img src="https://duyi-bucket.oss-cn-beijing.aliyuncs.com/img/rec.png">
@@ -41,7 +41,7 @@
             class="num"
             v-show="counterNum[good.id]"
           >{{ counterNum[good.id] ? counterNum[good.id] : '' }}</div>
-          <div @touchend="counter(good.id, 1)">
+          <div @touchend="counter(good.id, 1,index)">
             <img src="https://duyi-bucket.oss-cn-beijing.aliyuncs.com/img/add.png">
           </div>
         </div>
@@ -70,15 +70,15 @@ export default {
   },
   methods: {
     ...mapMutations(['storageChange']),
-    counter(id, num) {
+    counter(id, num, index) {
       // 修改本地的值
       this.storageChange({ id, num });
       /* 设置飞入购物车动画 */
       /*    起点位置 */
-      const { left, top } = this.$refs.img[1].getBoundingClientRect();/* 图片起始位置 */
-      const { offsetWidth: imgWidth, offsetHeight: imgHeight } = this.$refs.img;/* 购物车款宽高 */
+      const { left, top } = this.$refs.img[index].getBoundingClientRect();/* 图片起始位置 */
+      const { offsetWidth: imgWidth, offsetHeight: imgHeight } = this.$refs.img[0];/* 购物车款宽高 */
 
-      const shopCar = document.querySelector('shop-car');
+      const shopCar = document.querySelector('.shop-car');
       const { left: carX, top: carY } = shopCar.getBoundingClientRect();/* 购物车的位置 */
       const { offsetWidth: carWidth, offsetHeight: carHeight } = shopCar;/* 购物车款宽高 */
 
@@ -86,19 +86,21 @@ export default {
       const endX = carX + carWidth / 2;
       const endY = carY + carHeight / 2;
 
-      Animate({
-        src: this.$refs.img.src,
-        start: {
-          left,
-          top,
-        },
-        end: {
-          endX,
-          endY,
-        },
-        width: imgWidth,
-        heihgt: imgHeight,
-      });
+      if (num === 1) {
+        Animate({
+          src: this.$refs.img[index].src,
+          start: {
+            left,
+            top,
+          },
+          end: {
+            endX,
+            endY,
+          },
+          width: imgWidth,
+          height: imgHeight,
+        });
+      }
     },
   },
   computed: {

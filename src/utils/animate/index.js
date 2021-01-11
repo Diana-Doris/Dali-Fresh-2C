@@ -3,11 +3,11 @@ import com from './index.vue';
 
 const Animate = Vue.extend(com);
 
-export default function ({
+export default function createAnimate({
   start, end, width, height, src,
 }) {
   const app = new Animate({
-    el: document.createElement('div') /* 挂载到这个新的div上 */,
+    el: document.createElement('div'),
     data() {
       return {
         moveX: start.left,
@@ -23,7 +23,6 @@ export default function ({
     },
   });
   document.body.appendChild(app.$el);
-
   setTimeout(() => {
     app.moveX = end.endX;
     app.moveY = end.endY;
@@ -31,8 +30,7 @@ export default function ({
     app.sy = 0.1;
     app.opacity = 0;
   }, 0);
-  /* 销毁 */
   setTimeout(() => {
     app.exist = false;
-  }, 1100);
+  }, 1000);
 }
